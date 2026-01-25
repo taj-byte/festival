@@ -110,6 +110,17 @@ class ShopItemController {
         $shops = $shopController->getCache();
         $items = $itemController->getCache();
 
+        // 既に店舗商品が登録されている店舗IDを取得
+        $shopItems = $this->shopItemModel->getAll();
+        $registeredShopIds = array_unique(array_map(function($si) {
+            return $si->sh_id;
+        }, $shopItems));
+
+        // 店舗商品未登録の店舗のみにフィルタリング
+        $shops = array_filter($allShops, function($shop) use ($registeredShopIds) {
+            return !in_array($shop->sh_id, $registeredShopIds);
+        });
+
         // 商品を年度別にグループ化
         require_once __DIR__ . '/../models/ItemModel.php';
         $itemDAO = new ItemDAO($this->pdo);
