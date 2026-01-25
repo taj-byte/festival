@@ -4,6 +4,7 @@ require_once __DIR__ . '/../models/ShopModel.php';
 require_once __DIR__ . '/../dao/SalesDAO.php';
 require_once __DIR__ . '/../dao/ShopDAO.php';
 require_once __DIR__ . '/../utils/CsrfToken.php';
+require_once __DIR__ . '/../config/settings.php';
 
 /**
  * SalesController - 売上管理のコントローラー層
@@ -83,8 +84,8 @@ class SalesController {
      * 売上一覧表示処理
      */
     public function listSales() {
-        // リクエストから年度パラメータを取得
-        $fy = isset($_GET['fy']) && $_GET['fy'] !== '' ? (int)$_GET['fy'] : null;
+        // リクエストから年度パラメータを取得（デフォルトは現在年度）
+        $fy = isset($_GET['fy']) ? ($_GET['fy'] !== '' ? (int)$_GET['fy'] : null) : CURRENT_FY;
 
         // 店舗ごとの売上合計を取得（降順）
         $salesSummary = $this->salesModel->getShopSum($fy);
@@ -243,8 +244,8 @@ class SalesController {
      * 店舗別の午前・午後・合計売上を表示
      */
     public function showSalesByPeriod() {
-        // リクエストから年度パラメータを取得
-        $fy = isset($_GET['fy']) && $_GET['fy'] !== '' ? (int)$_GET['fy'] : null;
+        // リクエストから年度パラメータを取得（デフォルトは現在年度）
+        $fy = isset($_GET['fy']) ? ($_GET['fy'] !== '' ? (int)$_GET['fy'] : null) : CURRENT_FY;
 
         $shopSales = $this->salesModel->getByPeriod($fy);
 

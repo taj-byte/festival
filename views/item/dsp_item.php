@@ -10,6 +10,7 @@ $data = $itemController->listByYear();
 $byYear = $data['byYear'];
 $years = $data['years'];
 $selectedYear = $data['year'];
+$currentFy = $data['currentFy'];
 ?>
 
 <?php require __DIR__ . '/../common/header.php'; ?>
@@ -37,7 +38,7 @@ $selectedYear = $data['year'];
         <noscript><button type="submit">表示</button></noscript>
     </form>
 
-    <?php if ($selectedYear !== 'all'): ?>
+    <?php if ($selectedYear !== 'all' && $selectedYear != $currentFy): ?>
         <a href="dsp_item.php" style="margin-left: 10px; color: #007bff; text-decoration: none;">
             ✕ フィルタ解除
         </a>

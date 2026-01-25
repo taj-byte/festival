@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/ItemModel.php';
 require_once __DIR__ . '/../dao/ItemDAO.php';
+require_once __DIR__ . '/../config/settings.php';
 
 /**
  * ItemController - 商品管理のコントローラー層
@@ -44,7 +45,8 @@ class ItemController {
      * 商品一覧を年度別にグループ化して表示
      */
     public function listByYear() {
-        $year = $_GET['year'] ?? 'all';
+        // デフォルトは現在年度（パラメータがない場合）
+        $year = isset($_GET['year']) ? $_GET['year'] : CURRENT_FY;
         $items = $this->itemModel->getAll();
         $byYear = $this->itemModel->groupByYear($items);
 
@@ -60,7 +62,8 @@ class ItemController {
         return [
             'byYear' => $byYear,
             'years' => $years,
-            'year' => $year
+            'year' => $year,
+            'currentFy' => CURRENT_FY
         ];
     }
 
