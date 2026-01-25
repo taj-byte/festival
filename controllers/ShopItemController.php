@@ -117,7 +117,7 @@ class ShopItemController {
         }, $shopItems));
 
         // 店舗商品未登録の店舗のみにフィルタリング
-        $shops = array_filter($allShops, function($shop) use ($registeredShopIds) {
+        $shops = array_filter($shops, function($shop) use ($registeredShopIds) {
             return !in_array($shop->sh_id, $registeredShopIds);
         });
 
