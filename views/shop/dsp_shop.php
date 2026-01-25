@@ -1,12 +1,13 @@
 <?php
 require __DIR__ . '/../../config/dbConnection.php';
+require __DIR__ . '/../../config/settings.php';
 require_once __DIR__ . '/../../controllers/ShopController.php';
 
 // Controllerのインスタンスを作成
 $ShopController = new ShopController($pdo);
 
-// Controller層に処理を委譲
-$shops = $ShopController->display();
+// Controller層に処理を委譲（現在年度のみ）
+$shops = $ShopController->displayByFy(CURRENT_FY);
 ?>
 
 <?php require __DIR__ . '/../common/header.php'; ?>

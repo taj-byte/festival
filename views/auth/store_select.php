@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../config/init.php';
 require __DIR__ . '/../../config/dbConnection.php';
+require __DIR__ . '/../../config/settings.php';
 
 /* ログインチェック */
 if (!isset($_SESSION['student_id'])) {
@@ -8,17 +9,18 @@ if (!isset($_SESSION['student_id'])) {
     exit;
 }
 
-/* 店舗一覧を取得 */
+/* 店舗一覧を取得（現在の年度のみ） */
 $sql = "
 SELECT
     sh_id,
     class,
     pr_name
 FROM shop
+WHERE fy = ?
 ORDER BY sh_id
 ";
 $stmt = $pdo->prepare($sql);
-$stmt->execute();
+$stmt->execute([CURRENT_FY]);
 $stores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>

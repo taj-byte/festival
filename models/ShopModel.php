@@ -62,6 +62,15 @@ class ShopModel {
     }
 
     /**
+     * 年度で店舗を取得
+     * @param int $fy 年度
+     * @return array ShopDTOの配列
+     */
+    public function getByFy($fy) {
+        return $this->shopDAO->getShopsByFy($fy);
+    }
+
+    /**
      * 店舗IDで店舗情報を取得
      * @param int $shopId 店舗ID
      * @return ShopDTO|null 店舗DTO

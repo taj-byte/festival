@@ -39,7 +39,16 @@ class ShopController {
     }
 
     public function display() {
-    return $this->shopModel->getAll();
+        return $this->shopModel->getAll();
+    }
+
+    /**
+     * 年度で店舗一覧を取得
+     * @param int $fy 年度
+     * @return array ShopDTOの配列
+     */
+    public function displayByFy($fy) {
+        return $this->shopModel->getByFy($fy);
     }
 
     /**

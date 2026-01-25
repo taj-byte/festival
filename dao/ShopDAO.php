@@ -35,6 +35,24 @@ class ShopDAO extends BaseDAO {
     }
 
     /**
+     * 年度で店舗を取得
+     * @param int $fy 年度
+     * @return array ShopDTOの配列
+     */
+    public function getShopsByFy($fy) {
+        $sql = 'SELECT sh_id, fy, class, pr_name, place FROM shop WHERE fy = ? ORDER BY sh_id';
+        return $this->fetchAll($sql, [$fy], function($row) {
+            return new ShopDTO(
+                $row['sh_id'],
+                $row['fy'],
+                $row['class'],
+                $row['pr_name'],
+                $row['place']
+            );
+        });
+    }
+
+    /**
      * 店舗IDで店舗情報を取得
      * @param int $shopId 店舗ID
      * @return ShopDTO|null 店舗DTO
