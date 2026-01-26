@@ -12,7 +12,7 @@ $result = $ShopController->addshop();
 ?>
 <?php require __DIR__ . '/../common/header.php'; ?>
 
-<p style="color: red;"><?= htmlspecialchars($result['message'], ENT_QUOTES, 'UTF-8') ?></p>
+<p class="text-error"><?= htmlspecialchars($result['message'], ENT_QUOTES, 'UTF-8') ?></p>
 <p><a href="inp_shop.php">戻る</a></p>
 
 <?php require __DIR__ . '/../common/footer.php'; ?>

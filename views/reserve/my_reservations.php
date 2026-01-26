@@ -19,39 +19,41 @@ $reservations = $ctrl->getByStudentLabeled($student_id);
 
 <?php require __DIR__ . '/../common/header.php'; ?>
 
-<p style="text-align: right; font-size: 0.9em;">
+<p class="login-info-bar">
     ログイン中: <?= htmlspecialchars($_SESSION['student_id'], ENT_QUOTES, 'UTF-8') ?> |
     <a href="../auth/logout.php">ログアウト</a>
 </p>
 
 <h2>予約一覧（全店舗）</h2>
 
-<table border="1" cellpadding="5">
-<tr>
-    <th>日時</th>
-    <th>企画名</th>
-    <th>場所</th>
-    <th>商品名</th>
-    <th>数量</th>
-    <th>状態</th>
-</tr>
-
-<?php foreach ($reservations as $r): ?>
-<tr>
-    <td><?= htmlspecialchars($r['datetime'], ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($r['pr_name'], ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($r['place'], ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($r['i_name'], ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($r['num'], ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($r['situation_label'], ENT_QUOTES, 'UTF-8') ?></td>
-</tr>
-<?php endforeach; ?>
-
+<table class="data-table card-table">
+    <thead>
+        <tr>
+            <th scope="col">日時</th>
+            <th scope="col">企画名</th>
+            <th scope="col">場所</th>
+            <th scope="col">商品名</th>
+            <th scope="col">数量</th>
+            <th scope="col">状態</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($reservations as $r): ?>
+        <tr>
+            <td data-label="日時"><?= htmlspecialchars($r['datetime'], ENT_QUOTES, 'UTF-8') ?></td>
+            <td data-label="企画名"><?= htmlspecialchars($r['pr_name'], ENT_QUOTES, 'UTF-8') ?></td>
+            <td data-label="場所"><?= htmlspecialchars($r['place'], ENT_QUOTES, 'UTF-8') ?></td>
+            <td data-label="商品名"><?= htmlspecialchars($r['i_name'], ENT_QUOTES, 'UTF-8') ?></td>
+            <td data-label="数量"><?= htmlspecialchars($r['num'], ENT_QUOTES, 'UTF-8') ?></td>
+            <td data-label="状態"><?= htmlspecialchars($r['situation_label'], ENT_QUOTES, 'UTF-8') ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>
 
-<p>
-    <a href="../auth/store_select.php">別の店舗で予約</a> |
+<nav class="page-nav" aria-label="ページナビゲーション">
+    <a href="../auth/store_select.php">別の店舗で予約</a>
     <a href="../common/index.html">メニューに戻る</a>
-</p>
+</nav>
 
 <?php require __DIR__ . '/../common/footer.php'; ?>

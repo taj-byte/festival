@@ -33,76 +33,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>学生ログイン</title>
-<style>
-body {
-    font-family: sans-serif;
-    background: #f5f5f5;
-}
-.login-box {
-    width: 350px;
-    margin: 100px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 6px;
-}
-h2 {
-    text-align: center;
-}
-label {
-    display: block;
-    margin-top: 10px;
-}
-input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-}
-button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 10px;
-}
-.error {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
-}
-.back-link {
-    text-align: center;
-    margin-top: 15px;
-}
-.back-link a {
-    color: #666;
-    text-decoration: none;
-}
-.back-link a:hover {
-    text-decoration: underline;
-}
-</style>
+<link rel="stylesheet" href="../css/festival.css">
 </head>
 
-<body>
+<body class="login-body">
 <div class="login-box">
     <h2>学生ログイン</h2>
 
     <?php if ($error): ?>
-        <div class="error"><?= htmlspecialchars($error) ?></div>
+        <div class="login-error" role="alert"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
     <form method="post">
-        <label>学生ID</label>
-        <input type="text" name="student_id" required>
+        <label for="student_id">学生ID</label>
+        <input type="text" name="student_id" id="student_id" placeholder="例: S001" autocomplete="username" required>
 
-        <label>パスコード</label>
-        <input type="password" name="passcode" required>
+        <label for="passcode">パスコード</label>
+        <div class="password-wrapper">
+            <input type="password" name="passcode" id="passcode" placeholder="パスコードを入力" autocomplete="current-password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="パスワード表示切替">&#128065;</button>
+        </div>
 
-        <button type="submit">ログイン</button>
+        <button type="submit" class="btn btn-primary">ログイン</button>
     </form>
 
     <div class="back-link">
         <a href="../common/index.html">← トップページに戻る</a>
     </div>
 </div>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('passcode');
+    const btn = document.querySelector('.password-toggle');
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🔒';
+    } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+    }
+}
+</script>
 </body>
 </html>

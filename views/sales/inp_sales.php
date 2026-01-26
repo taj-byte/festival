@@ -28,73 +28,11 @@ if (empty($shops)) {
 <h2>売上登録</h2>
 
 <?php if (isset($error)): ?>
-    <p style="color: red;">エラー: <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
+    <p class="error-text">エラー: <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
     <p><a href="../shop/dsp_shop.php">店舗一覧に戻る</a></p>
 <?php elseif (empty($shops)): ?>
     <p>店舗情報を読み込んでいます...</p>
 <?php else: ?>
-    <style>
-        .loading {
-            color: #666;
-            font-style: italic;
-        }
-        .error {
-            color: red;
-        }
-        .success {
-            color: green;
-        }
-
-        /* テーブル風レイアウト */
-        .sales-table {
-            display: table;
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .sales-header {
-            display: table-row;
-            background-color: #f0f0f0;
-            font-weight: bold;
-        }
-
-        .sales-header > div {
-            display: table-cell;
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        .sales-row {
-            display: table-row;
-        }
-
-        .sales-row:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .sales-cell {
-            display: table-cell;
-            padding: 10px;
-            border: 1px solid #ddd;
-            vertical-align: middle;
-        }
-
-        .sales-cell select,
-        .sales-cell input {
-            width: 95%;
-            padding: 5px;
-            box-sizing: border-box;
-        }
-
-        .item-status {
-            display: block;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-    </style>
-
     <!-- 売上登録フォーム -->
     <form action="add_sales.php" method="post" id="salesForm">
         <p>
@@ -111,18 +49,18 @@ if (empty($shops)) {
         </p>
 
         <!-- 予約チェック機能 -->
-        <div style="background-color: #f0f8ff; padding: 15px; margin: 15px 0; border: 1px solid #4CAF50; border-radius: 5px;">
-            <h3 style="margin-top: 0;">予約確認</h3>
+        <div class="reservation-check-box">
+            <h3>予約確認</h3>
             <p>
                 学生名:
                 <input type="text" id="student_name" placeholder="学生の名前を入力">
                 <button type="button" id="checkReservationBtn" onclick="checkReservation()" disabled>予約チェック</button>
                 <span id="reservationStatus" class="item-status"></span>
             </p>
-            <div id="reservationInfo" style="display: none; margin-top: 10px; padding: 10px; background-color: #e8f5e9; border-left: 4px solid #4CAF50;">
+            <div id="reservationInfo" class="reservation-info">
                 <!-- 予約情報がここに表示される -->
             </div>
-            <div id="multipleStudents" style="display: none; margin-top: 10px;">
+            <div id="multipleStudents" class="multiple-students">
                 <!-- 複数の学生候補がここに表示される -->
             </div>
         </div>
@@ -131,7 +69,7 @@ if (empty($shops)) {
         <input type="hidden" name="reserve_id" id="reserve_id" value="">
         <input type="hidden" name="student_id" id="student_id" value="">
 
-        <div class="sales-table">
+        <div class="sales-input-table">
             <!-- テーブルヘッダー -->
             <div class="sales-header">
                 <div>商品名</div>
@@ -166,11 +104,33 @@ if (empty($shops)) {
         </p>
     </form>
 
+    <!-- トースト通知コンテナ -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
     <script>
     // 商品価格データを保持するグローバル変数
     let itemPrices = {};
     // 予約情報を保持するグローバル変数
     let currentReservation = null;
+
+    // トースト通知を表示する関数
+    function showToast(message, type = 'info', duration = 3000) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-' + type;
+
+        const icons = { success: '\u2714', error: '\u2718', warning: '\u26A0', info: '\u2139' };
+        toast.innerHTML =
+            '<span class="toast-icon">' + (icons[type] || icons.info) + '</span>' +
+            '<span class="toast-message">' + escapeHtml(message) + '</span>' +
+            '<button class="toast-close" onclick="this.parentElement.remove()">&times;</button>';
+
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'toast-out 0.3s ease-in forwards';
+            toast.addEventListener('animationend', () => toast.remove());
+        }, duration);
+    }
 
     // 商品選択時に単価を自動入力する関数
     function updatePrice(index) {
@@ -198,21 +158,21 @@ if (empty($shops)) {
         const reservationStatus = document.getElementById('reservationStatus');
         const reservationInfo = document.getElementById('reservationInfo');
         const multipleStudents = document.getElementById('multipleStudents');
+        const btn = document.getElementById('checkReservationBtn');
 
         if (!studentName) {
-            reservationStatus.textContent = '学生名を入力してください';
-            reservationStatus.className = 'error';
+            showToast('学生名を入力してください', 'warning');
             return;
         }
 
         if (!shopId) {
-            reservationStatus.textContent = '先に店舗を選択してください';
-            reservationStatus.className = 'error';
+            showToast('先に店舗を選択してください', 'warning');
             return;
         }
 
-        // ローディング表示
-        reservationStatus.textContent = '予約を確認中...';
+        // ローディング表示（スピナー付き）
+        btn.disabled = true;
+        reservationStatus.innerHTML = '<span class="spinner"></span> 予約を確認中...';
         reservationStatus.className = 'loading';
         reservationInfo.style.display = 'none';
         multipleStudents.style.display = 'none';
@@ -227,46 +187,43 @@ if (empty($shops)) {
         })
         .then(response => response.json())
         .then(data => {
+            btn.disabled = false;
+            reservationStatus.innerHTML = '';
             if (data.success) {
                 if (data.multiple_students) {
                     // 複数の学生が見つかった場合
                     displayMultipleStudents(data.students, shopId);
-                    reservationStatus.textContent = data.message;
-                    reservationStatus.className = 'error';
+                    showToast(data.message, 'warning');
                 } else if (data.has_reservation) {
                     // 予約が見つかった場合
                     displayReservation(data);
-                    reservationStatus.textContent = '予約情報を取得しました';
-                    reservationStatus.className = 'success';
-                    setTimeout(() => { reservationStatus.textContent = ''; }, 3000);
+                    showToast('予約情報を取得しました', 'success');
                 } else {
                     // 予約が見つからなかった場合
                     clearReservation();
-                    reservationStatus.textContent = data.message;
-                    reservationStatus.className = 'error';
+                    showToast(data.message, 'warning');
                 }
             } else {
-                reservationStatus.textContent = 'エラー: ' + data.message;
-                reservationStatus.className = 'error';
+                showToast('エラー: ' + data.message, 'error');
             }
         })
         .catch(error => {
+            btn.disabled = false;
+            reservationStatus.innerHTML = '';
             console.error('Error:', error);
-            reservationStatus.textContent = '通信エラーが発生しました';
-            reservationStatus.className = 'error';
+            showToast('通信エラーが発生しました', 'error');
         });
     }
 
     // 複数の学生候補を表示
     function displayMultipleStudents(students, shopId) {
         const multipleStudents = document.getElementById('multipleStudents');
-        let html = '<h4>該当する学生を選択してください:</h4><ul style="list-style: none; padding: 0;">';
+        let html = '<h4>該当する学生を選択してください:</h4><ul class="multiple-students-list">';
 
         students.forEach(student => {
-            html += '<li style="margin: 5px 0;">' +
+            html += '<li>' +
                     '<button type="button" onclick="selectStudent(\'' + student.st_id + '\', \'' +
-                    escapeHtml(student.name) + '\', \'' + shopId + '\')" ' +
-                    'style="padding: 8px 15px; cursor: pointer;">' +
+                    escapeHtml(student.name) + '\', \'' + shopId + '\')">' +
                     escapeHtml(student.name) + ' (' + escapeHtml(student.class) + ')' +
                     '</button></li>';
         });
@@ -280,8 +237,8 @@ if (empty($shops)) {
     function selectStudent(studentId, studentName, shopId) {
         const reservationStatus = document.getElementById('reservationStatus');
 
-        // ローディング表示
-        reservationStatus.textContent = '予約を確認中...';
+        // ローディング表示（スピナー付き）
+        reservationStatus.innerHTML = '<span class="spinner"></span> 予約を確認中...';
         reservationStatus.className = 'loading';
         document.getElementById('multipleStudents').style.display = 'none';
 
@@ -295,21 +252,19 @@ if (empty($shops)) {
         })
         .then(response => response.json())
         .then(data => {
+            reservationStatus.innerHTML = '';
             if (data.success && data.has_reservation) {
                 displayReservation(data);
-                reservationStatus.textContent = '予約情報を取得しました';
-                reservationStatus.className = 'success';
-                setTimeout(() => { reservationStatus.textContent = ''; }, 3000);
+                showToast('予約情報を取得しました', 'success');
             } else {
                 clearReservation();
-                reservationStatus.textContent = studentName + ' さんの予約はありません';
-                reservationStatus.className = 'error';
+                showToast(studentName + ' さんの予約はありません', 'warning');
             }
         })
         .catch(error => {
+            reservationStatus.innerHTML = '';
             console.error('Error:', error);
-            reservationStatus.textContent = '通信エラーが発生しました';
-            reservationStatus.className = 'error';
+            showToast('通信エラーが発生しました', 'error');
         });
     }
 
@@ -326,8 +281,8 @@ if (empty($shops)) {
             '数量: ' + data.reservation.num + '<br>' +
             '単価: ' + parseFloat(data.reservation.i_price).toLocaleString() + '円<br>' +
             '予約日時: ' + escapeHtml(data.reservation.datetime) + '<br>' +
-            '<button type="button" onclick="applyReservation()" style="margin-top: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer;">この予約内容を入力欄に反映</button> ' +
-            '<button type="button" onclick="clearReservation()" style="margin-top: 10px; padding: 5px 10px; background-color: #f44336; color: white; border: none; border-radius: 3px; cursor: pointer;">クリア</button>';
+            '<button type="button" onclick="applyReservation()" class="reservation-apply-btn">この予約内容を入力欄に反映</button> ' +
+            '<button type="button" onclick="clearReservation()" class="reservation-clear-btn">クリア</button>';
         reservationInfo.style.display = 'block';
 
         // 予約IDと学生IDを隠しフィールドに設定
@@ -351,7 +306,7 @@ if (empty($shops)) {
         numInput.value = currentReservation.num;
         discInput.value = '0';
 
-        alert('予約内容を1行目に反映しました');
+        showToast('予約内容を1行目に反映しました', 'success');
     }
 
     // 予約情報をクリア
@@ -408,8 +363,8 @@ if (empty($shops)) {
             return;
         }
 
-        // ローディング表示
-        shopStatus.textContent = '商品を読み込んでいます...';
+        // ローディング表示（スピナー付き）
+        shopStatus.innerHTML = '<span class="spinner"></span> 商品を読み込んでいます...';
         shopStatus.className = 'loading';
 
         // Ajaxで商品データを取得
@@ -439,26 +394,21 @@ if (empty($shops)) {
                             itemSelect.disabled = false;
                         });
 
-                        shopStatus.textContent = '商品が読み込まれました (' + data.count + '件)';
-                        shopStatus.className = 'success';
-
-                        // 3秒後にメッセージを消す
-                        setTimeout(() => {
-                            shopStatus.textContent = '';
-                        }, 3000);
+                        showToast('商品が読み込まれました (' + data.count + '件)', 'success');
+                        shopStatus.innerHTML = '';
                     } else {
                         itemSelects.forEach(itemSelect => {
                             itemSelect.innerHTML = '<option value="">この店舗に商品がありません</option>';
                         });
-                        shopStatus.textContent = 'この店舗に登録されている商品がありません';
-                        shopStatus.className = 'error';
+                        showToast('この店舗に登録されている商品がありません', 'warning');
+                        shopStatus.innerHTML = '';
                     }
                 } else {
                     itemSelects.forEach(itemSelect => {
                         itemSelect.innerHTML = '<option value="">エラーが発生しました</option>';
                     });
-                    shopStatus.textContent = 'エラー: ' + data.message;
-                    shopStatus.className = 'error';
+                    showToast('エラー: ' + data.message, 'error');
+                    shopStatus.innerHTML = '';
                 }
             })
             .catch(error => {
@@ -466,13 +416,15 @@ if (empty($shops)) {
                 itemSelects.forEach(itemSelect => {
                     itemSelect.innerHTML = '<option value="">エラーが発生しました</option>';
                 });
-                shopStatus.textContent = '通信エラーが発生しました';
-                shopStatus.className = 'error';
+                showToast('通信エラーが発生しました', 'error');
+                shopStatus.innerHTML = '';
             });
     });
     </script>
 
-    <p><a href="../common/index.html">メニューに戻る</a></p>
+    <nav class="page-nav" aria-label="ページナビゲーション">
+        <a href="../common/index.html">メニューに戻る</a>
+    </nav>
 <?php endif; ?>
 
 <?php require __DIR__ . '/../common/footer.php'; ?>

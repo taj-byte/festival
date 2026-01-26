@@ -1,24 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>学園祭売り上げシステム</title>
-<link rel="stylesheet" href="css/sales.css">
+<link rel="stylesheet" href="css/festival.css">
 </head>
 <body>
 <h2>学園祭売り上げシステム</h2>
-<p><a href="../item/inp_item.php">商品登録</a></p>
-<p><a href="../item/dsp_item.php">商品一覧</a></p>
-<p><a href="../sales/inp_sales.php">売上登録</a></p>
-<p><a href="../sales/dsp_sales.php">売上表示</a></p>
-<p><a href="../sales/dsp_shop_sales.php">売上午前午後</a></p>
-<p><a href="../item/inp_shopitem.php">店舗商品登録</a></p>
-<p><a href="../item/dsp_shopitem.php">店舗商品表示</a></p>
-<p><a href="../shop/inp_shop.php">店舗登録</a></p>
-<p><a href="../shop/dsp_shop.php">店舗一覧</a></p>
-<p><a href="../item/products.php">予約</a></p>
-<p><a href="../reserve/my_reservations.php">予約確認</a></p>
-<p><a href="../student/dsp_student.php">生徒一覧</a></p>
-<p><a href="../student/st_search.php">生徒検索</a></p>
+
+<div class="menu-container">
+    <div class="menu-group">
+        <h3 class="menu-group-title">売上管理</h3>
+        <div class="menu-grid">
+            <a class="menu-link" href="../sales/inp_sales.php">売上登録</a>
+            <a class="menu-link" href="../sales/dsp_sales.php">売上表示</a>
+            <a class="menu-link" href="../sales/dsp_shop_sales.php">売上午前午後</a>
+        </div>
+    </div>
+
+    <div class="menu-group">
+        <h3 class="menu-group-title">商品管理</h3>
+        <div class="menu-grid">
+            <a class="menu-link" href="../item/inp_item.php">商品登録</a>
+            <a class="menu-link" href="../item/dsp_item.php">商品一覧</a>
+            <a class="menu-link" href="../item/inp_shopitem.php">店舗商品登録</a>
+            <a class="menu-link" href="../item/dsp_shopitem.php">店舗商品表示</a>
+        </div>
+    </div>
+
+    <div class="menu-group">
+        <h3 class="menu-group-title">店舗管理</h3>
+        <div class="menu-grid">
+            <a class="menu-link" href="../shop/inp_shop.php">店舗登録</a>
+            <a class="menu-link" href="../shop/dsp_shop.php">店舗一覧</a>
+        </div>
+    </div>
+
+    <div class="menu-group">
+        <h3 class="menu-group-title">予約・生徒</h3>
+        <div class="menu-grid">
+            <a class="menu-link" href="../item/products.php">予約</a>
+            <a class="menu-link" href="../reserve/my_reservations.php">予約確認</a>
+            <a class="menu-link" href="../student/dsp_student.php">生徒一覧</a>
+            <a class="menu-link" href="../student/st_search.php">生徒検索</a>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

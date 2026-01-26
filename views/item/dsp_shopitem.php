@@ -20,34 +20,34 @@ $shopItemsGrouped = $data['shopItemsGrouped'];
 <?php else: ?>
     <?php foreach ($shopItemsGrouped as $shopId => $shopData): ?>
         <?php if ($shopData['shop']): ?>
-            <h3 style="background-color: #e9ecef; padding: 8px; margin-top: 20px; border-left: 4px solid #28a745;">
+            <h3 class="shop-header">
                 <?= htmlspecialchars($shopData['shop']->pr_name, ENT_QUOTES, 'UTF-8') ?>
-                <span style="font-size: 14px; font-weight: normal; color: #666;">
+                <span class="shop-header-count">
                     (<?= count($shopData['items']) ?>件)
                 </span>
             </h3>
 
             <?php if (empty($shopData['items'])): ?>
-                <p style="margin-left: 20px; color: #666;">登録されている商品はありません</p>
+                <p class="no-items-text">登録されている商品はありません</p>
             <?php else: ?>
-                <table border="1" style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
+                <table class="data-table card-table">
                     <thead>
                         <tr>
-                            <th style="width: 80px;">商品ID</th>
-                            <th>商品名</th>
-                            <th style="width: 120px;">価格</th>
+                            <th scope="col" class="col-id">商品ID</th>
+                            <th scope="col">商品名</th>
+                            <th scope="col" class="col-price">価格</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($shopData['items'] as $shopItem): ?>
                             <tr>
-                                <td style="text-align: center;">
+                                <td class="text-center" data-label="商品ID">
                                     <?= htmlspecialchars($shopItem['item']->i_id, ENT_QUOTES, 'UTF-8') ?>
                                 </td>
-                                <td>
+                                <td data-label="商品名">
                                     <?= htmlspecialchars($shopItem['item']->i_name, ENT_QUOTES, 'UTF-8') ?>
                                 </td>
-                                <td style="text-align: right;">
+                                <td class="text-right" data-label="価格">
                                     ¥<?= number_format($shopItem['item']->i_price) ?>
                                 </td>
                             </tr>
@@ -59,9 +59,9 @@ $shopItemsGrouped = $data['shopItemsGrouped'];
     <?php endforeach; ?>
 <?php endif; ?>
 
-<p>
-    <a href="inp_shopitem.php">店舗商品追加</a> |
+<nav class="page-nav" aria-label="ページナビゲーション">
+    <a href="inp_shopitem.php">店舗商品追加</a>
     <a href="../common/index.html">メニューに戻る</a>
-</p>
+</nav>
 
 <?php require __DIR__ . '/../common/footer.php'; ?>

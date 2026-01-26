@@ -27,58 +27,38 @@ $stores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>店舗選択</title>
-<style>
-body {
-    font-family: sans-serif;
-    background: #f5f5f5;
-}
-.container {
-    width: 400px;
-    margin: 50px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 6px;
-}
-h2 {
-    text-align: center;
-}
-.store {
-    margin: 10px 0;
-}
-button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店舗選択 - 学園祭売り上げシステム</title>
+<link rel="stylesheet" href="../css/festival.css">
 </head>
 
-<body>
-<div class="container">
-    <p style="text-align: right; margin: 0; padding: 10px 0; font-size: 0.9em;">
+<body class="store-select-body">
+<main class="store-select-container" role="main">
+    <p class="store-select-login-info">
         ログイン中: <?= htmlspecialchars($_SESSION['student_id'], ENT_QUOTES, 'UTF-8') ?> |
         <a href="logout.php">ログアウト</a>
     </p>
     <h2>店舗を選択してください</h2>
 
-    <?php foreach ($stores as $s): ?>
-        <div class="store">
-            <form method="post" action="../item/products.php">
-                <input type="hidden" name="store_id"
-                       value="<?= htmlspecialchars($s['sh_id'], ENT_QUOTES, 'UTF-8') ?>">
-                <button type="submit">
-                    <?= htmlspecialchars($s['class'] , ENT_QUOTES, 'UTF-8') ?>
-                    <?= htmlspecialchars($s['pr_name'] , ENT_QUOTES, 'UTF-8') ?>
-                </button>
-            </form>
-        </div>
-    <?php endforeach; ?>
+    <div role="list" aria-label="店舗一覧">
+        <?php foreach ($stores as $s): ?>
+            <div class="store" role="listitem">
+                <form method="post" action="../item/products.php">
+                    <input type="hidden" name="store_id"
+                           value="<?= htmlspecialchars($s['sh_id'], ENT_QUOTES, 'UTF-8') ?>">
+                    <button type="submit" class="btn btn-outline">
+                        <?= htmlspecialchars($s['class'] , ENT_QUOTES, 'UTF-8') ?>
+                        <?= htmlspecialchars($s['pr_name'] , ENT_QUOTES, 'UTF-8') ?>
+                    </button>
+                </form>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
-    <p style="text-align: center; margin-top: 20px;">
+    <nav class="page-nav" aria-label="ページナビゲーション">
         <a href="../common/index.html">メニューに戻る</a>
-    </p>
+    </nav>
 
-</div>
+</main>
 </body>
 </html>

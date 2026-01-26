@@ -43,12 +43,12 @@ $products = $stmt->fetchAll();
 
 <?php require __DIR__ . '/../common/header.php'; ?>
 
-<p style="text-align: right; font-size: 0.9em;">
+<p class="login-info-bar">
     ログイン中: <?= htmlspecialchars($_SESSION['student_id'], ENT_QUOTES, 'UTF-8') ?> |
     <a href="../auth/logout.php">ログアウト</a>
 </p>
 
-<div style="background: #f0f0f0; padding: 15px; margin: 20px 0; border-left: 4px solid #333;">
+<div class="shop-info-box">
     <strong>選択中の店舗:</strong>
     <?= htmlspecialchars($shop['class'], ENT_QUOTES, 'UTF-8') ?>
     <?= htmlspecialchars($shop['pr_name'], ENT_QUOTES, 'UTF-8') ?>
@@ -66,9 +66,9 @@ $products = $stmt->fetchAll();
 </form>
 <?php endforeach; ?>
 
-<p>
-    <a href="../auth/store_select.php">店舗選択に戻る</a> |
+<nav class="page-nav" aria-label="ページナビゲーション">
+    <a href="../auth/store_select.php">店舗選択に戻る</a>
     <a href="../common/index.html">メニューに戻る</a>
-</p>
+</nav>
 
 <?php require __DIR__ . '/../common/footer.php'; ?>

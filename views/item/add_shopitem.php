@@ -14,7 +14,7 @@ $result = $ctrl->add();
 
 <h2>店舗商品登録結果</h2>
 
-<p style="color: red;"><?= htmlspecialchars($result['message'], ENT_QUOTES, 'UTF-8') ?></p>
+<p class="text-error"><?= htmlspecialchars($result['message'], ENT_QUOTES, 'UTF-8') ?></p>
 
 <?php if (isset($result['added']) && isset($result['skipped'])): ?>
     <ul>
