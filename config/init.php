@@ -4,6 +4,9 @@
  * セッション開始前にDTOクラスをロードする
  */
 
+// アプリケーション設定を読み込み
+require_once __DIR__ . '/settings.php';
+
 // DTOクラスを事前ロード（セッションのシリアライズ/アンシリアライズに必要）
 require_once __DIR__ . '/../dto/ItemDTO.php';
 require_once __DIR__ . '/../dto/ShopDTO.php';

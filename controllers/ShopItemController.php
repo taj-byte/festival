@@ -121,6 +121,15 @@ class ShopItemController {
             return !in_array($shop->sh_id, $registeredShopIds);
         });
 
+        // 現在年度の商品のみにフィルタリング
+        $currentFY = CURRENT_FY;
+        $items = array_filter($items, function($item) use ($currentFY) {
+            if (preg_match('/\((\d{4})\)/u', $item->i_name, $m)) {
+                return (int)$m[1] === $currentFY;
+            }
+            return false;
+        });
+
         // 商品を年度別にグループ化
         require_once __DIR__ . '/../models/ItemModel.php';
         $itemDAO = new ItemDAO($this->pdo);

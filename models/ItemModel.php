@@ -51,6 +51,16 @@ class ItemModel {
             ];
         }
 
+        // 年度部分を除いた商品名が空でないかチェック
+        $nameWithoutYear = trim(preg_replace('/\(\d{4}\)/', '', $name));
+        if (empty($nameWithoutYear)) {
+            return [
+                'valid' => false,
+                'message' => '商品名を入力してください（年度だけでは登録できません）',
+                'year' => null
+            ];
+        }
+
         $year = (int)$matches[1];
 
         // 年度の範囲チェック

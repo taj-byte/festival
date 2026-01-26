@@ -42,7 +42,7 @@ $selectedYear = $data['selectedYear'];
 <?php if ($selectedYear !== null): ?>
     <div class="year-info-box">
         <strong>ℹ 表示中:</strong> <?= htmlspecialchars($selectedYear) ?>年度のみ
-        <a href="dsp_shop_sales.php" class="year-info-link">[全年度を表示]</a>
+        <a href="dsp_shop_sales.php?fy=" class="year-info-link">[全年度を表示]</a>
     </div>
 <?php endif; ?>
 

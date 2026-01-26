@@ -56,8 +56,8 @@ class ShopController {
      */
     public function selectShopId() {
         try {
-            // モデルから店舗データを取得
-            $shopDTOs = $this->shopModel->getAll();
+            // モデルから現在年度の店舗データを取得
+            $shopDTOs = $this->shopModel->getByFy(CURRENT_FY);
 
             if (count($shopDTOs) > 0) {
                 // DTOを配列に変換してセッションに保存
