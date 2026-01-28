@@ -107,7 +107,7 @@ class ShopItemController {
         require_once __DIR__ . '/ItemController.php';
         $shopController = new ShopController($this->pdo);
         $itemController = new ItemController($this->pdo);
-        $shops = $shopController->getCache();
+        $shops = $shopController->displayByFy(CURRENT_FY);
         $items = $itemController->getCache();
 
         // 既に店舗商品が登録されている店舗IDを取得
