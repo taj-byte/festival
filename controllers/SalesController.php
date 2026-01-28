@@ -63,7 +63,7 @@ class SalesController {
             // 両方成功したらコミット
             $this->pdo->commit();
 
-            header('Location: dsp_sales.php?s_id=' . $result['sales_id']);
+            header('Location: dsp_sales.php?s_id=' . $result['sales_id'], true, 303);
             exit();
 
         } catch (Exception $e) {
@@ -74,7 +74,7 @@ class SalesController {
             $_SESSION['error_message'] = $e->getMessage();
 
             // エラー画面またはフォームにリダイレクト
-            header('Location: add_sales.php?shop_id=' . urlencode($shopId));
+            header('Location: add_sales.php?shop_id=' . urlencode($shopId), true, 303);
             exit();
         }
     }
@@ -178,7 +178,7 @@ class SalesController {
         $csrfToken = $_POST['csrf_token'] ?? null;
         if (!CsrfToken::validate($csrfToken)) {
             $_SESSION['error_message'] = '不正なリクエストです（CSRFトークンが無効）';
-            header('Location: order_status.php?sh_id=' . ($_POST['sh_id'] ?? ''));
+            header('Location: order_status.php?sh_id=' . ($_POST['sh_id'] ?? ''), true, 303);
             exit();
         }
 
@@ -188,7 +188,7 @@ class SalesController {
 
         if (empty($salesId) || empty($shopId)) {
             $_SESSION['error_message'] = '必要なパラメータが不足しています';
-            header('Location: order_status.php?sh_id=' . $shopId);
+            header('Location: order_status.php?sh_id=' . $shopId, true, 303);
             exit();
         }
 
@@ -224,7 +224,7 @@ class SalesController {
             $this->pdo->commit();
 
             // 成功したら納品状況画面にリダイレクト
-            header('Location: order_status.php?sh_id=' . $shopId);
+            header('Location: order_status.php?sh_id=' . $shopId, true, 303);
             exit();
 
         } catch (Exception $e) {
@@ -235,7 +235,7 @@ class SalesController {
             $_SESSION['error_message'] = $e->getMessage();
 
             // エラー画面にリダイレクト
-            header('Location: order_status.php?sh_id=' . $shopId);
+            header('Location: order_status.php?sh_id=' . $shopId, true, 303);
             exit();
         }
     }

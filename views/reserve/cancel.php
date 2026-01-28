@@ -21,7 +21,7 @@ $result = $ctrl->cancel($reservation_id, $student_id);
 
 /* 結果に応じて処理 */
 if ($result['success']) {
-    header('Location: my_reservations.php');
+    header('Location: my_reservations.php', true, 303);
     exit;
 } else {
     die($result['message']);

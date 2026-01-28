@@ -26,7 +26,7 @@ class ItemController {
 
         if ($result['success']) {
             $this->clearCache();
-            header('Location: dsp_item.php', true, 301);
+            header('Location: dsp_item.php', true, 303);
             exit();
         }
 

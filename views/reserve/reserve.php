@@ -22,7 +22,7 @@ $result = $ctrl->create($student_id, $store_product_id, $quantity);
 
 /* 結果に応じて処理 */
 if ($result['success']) {
-    header('Location: my_reservations.php');
+    header('Location: my_reservations.php', true, 303);
     exit;
 } else {
     die($result['message']);

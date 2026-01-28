@@ -4,4 +4,4 @@
  */
 
 // 現在の年度（毎年4月に更新）
-define('CURRENT_FY', 2025);
+define('CURRENT_FY', 2026);

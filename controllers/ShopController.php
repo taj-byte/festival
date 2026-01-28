@@ -72,7 +72,7 @@ class ShopController {
                 // セッションの有効期限を設定（30分）
                 $_SESSION['sh_id_expires'] = time() + 1800;
 
-                header('Location: inp_sales.php', true, 301);
+                header('Location: inp_sales.php', true, 303);
                 exit;
             } else {
                 return ['error' => '店舗データが見つかりませんでした。'];
@@ -93,7 +93,7 @@ class ShopController {
             unset($_SESSION['sh_id_expires']);
             // セッション期限切れの場合、現在のページをリロード
             // inp_sales.phpが自動的に店舗選択処理を実行する
-            header('Location: ' . $_SERVER['PHP_SELF'], true, 301);
+            header('Location: ' . $_SERVER['PHP_SELF'], true, 303);
             exit;
         }
     }

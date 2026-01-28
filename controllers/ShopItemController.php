@@ -40,7 +40,7 @@ class ShopItemController {
 
         // 結果に応じて画面遷移
         if ($result['success']) {
-            header('Location: dsp_shopitem.php', true, 301);
+            header('Location: dsp_shopitem.php', true, 303);
             exit();
         }
 
@@ -152,7 +152,7 @@ class ShopItemController {
         $result = $this->shopItemModel->delete($shopId, $itemId);
 
         if ($result['success']) {
-            header('Location: dsp_shopitem.php', true, 301);
+            header('Location: dsp_shopitem.php', true, 303);
             exit();
         }
 
