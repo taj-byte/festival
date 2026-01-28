@@ -51,10 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="student_id" id="student_id" placeholder="例: S001" autocomplete="username" required>
 
         <label for="passcode">パスコード</label>
-        <div class="password-wrapper">
-            <input type="password" name="passcode" id="passcode" placeholder="パスコードを入力" autocomplete="current-password" required>
-            <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="パスワード表示切替">&#128065;</button>
-        </div>
+        <input type="password" name="passcode" id="passcode" placeholder="パスコードを入力" autocomplete="current-password" required>
 
         <button type="submit" class="btn btn-primary">ログイン</button>
     </form>
@@ -64,18 +61,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<script>
-function togglePassword() {
-    const input = document.getElementById('passcode');
-    const btn = document.querySelector('.password-toggle');
-    if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = '🔒';
-    } else {
-        input.type = 'password';
-        btn.textContent = '👁';
-    }
-}
-</script>
 </body>
 </html>

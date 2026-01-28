@@ -319,7 +319,7 @@ a:hover {
     margin-top: var(--space-xs);
 }
 
-.login-box button {
+.login-box button[type="submit"] {
     width: 100%;
     margin-top: var(--space-lg);
     padding: var(--space-md);
@@ -1137,7 +1137,7 @@ textarea:focus {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.login-box button {
+.login-box button[type="submit"] {
     background-color: var(--color-primary);
     color: var(--color-white);
     border: none;
@@ -1148,7 +1148,7 @@ textarea:focus {
     min-height: 44px;
 }
 
-.login-box button:hover {
+.login-box button[type="submit"]:hover {
     background-color: var(--color-primary-dark);
 }
 
@@ -1162,31 +1162,6 @@ textarea:focus {
     text-align: center;
 }
 
-.password-wrapper {
-    position: relative;
-}
-
-.password-toggle {
-    position: absolute;
-    right: var(--space-sm);
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text-light);
-    font-size: var(--font-size-md);
-    padding: var(--space-xs);
-    min-height: auto;
-    min-width: auto;
-    width: auto;
-    margin: 0;
-}
-
-.password-toggle:hover {
-    color: var(--color-text);
-    background: none;
-}
 
 /* ============================================
    店舗選択改善
