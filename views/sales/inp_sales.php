@@ -325,6 +325,14 @@ if (empty($shops)) {
         return div.innerHTML;
     }
 
+    // 学生名入力欄でエンターキーが押されたときの処理
+    document.getElementById('student_name').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkReservation();
+        }
+    });
+
     // 店舗IDのプルダウンが変更されたときの処理
     document.getElementById('shop_id').addEventListener('change', function() {
         const shopId = this.value;
