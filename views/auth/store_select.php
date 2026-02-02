@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/../../config/init.php';
 require __DIR__ . '/../../config/dbConnection.php';
-require __DIR__ . '/../../config/settings.php';
+// settings.phpはinit.php内で読み込み済み
 
 /* ログインチェック */
 if (!isset($_SESSION['student_id'])) {

@@ -1,6 +1,6 @@
 <?php
+require __DIR__ . '/../../config/init.php';
 require __DIR__ . '/../../config/dbConnection.php';
-require __DIR__ . '/../../config/settings.php';
 require_once __DIR__ . '/../../controllers/ShopController.php';
 
 // Controllerのインスタンスを作成

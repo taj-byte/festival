@@ -222,10 +222,12 @@ class ReserveDAO extends BaseDAO {
             r.situation,
             r.si_id,
             i.i_name,
-            i.i_price
+            i.i_price,
+            s.name AS student_name
         FROM reserve r
         JOIN shopitem si ON r.si_id = si.si_id
         JOIN item i ON si.i_id = i.i_id
+        JOIN student s ON r.st_id = s.st_id
         WHERE r.st_id = ?
         AND si.sh_id = ?
         AND r.situation = 0
