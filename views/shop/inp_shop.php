@@ -8,7 +8,8 @@
     </div>
     <div class="form-group">
         <label for="sh_class">クラス名:</label><br>
-        <input type="text" name="sh_class" id="sh_class" required>
+        <input type="text" name="sh_class" id="sh_class" required
+               pattern="[A-Z0-9]+" title="半角英数字で入力してください">
     </div>
     <div class="form-group">
         <label for="sh_name">店舗名:</label><br>

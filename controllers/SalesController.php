@@ -70,11 +70,8 @@ class SalesController {
             // エラー時はロールバック
             $this->pdo->rollBack();
 
-            // エラーメッセージをセッションに保存
-            $_SESSION['error_message'] = $e->getMessage();
-
-            // エラー画面またはフォームにリダイレクト
-            header('Location: add_sales.php?shop_id=' . urlencode($shopId), true, 303);
+            // エラー画面またはフォームにリダイレクト（エラーメッセージをクエリパラメータで渡す）
+            header('Location: add_sales.php?shop_id=' . urlencode($shopId) . '&error=' . urlencode($e->getMessage()), true, 303);
             exit();
         }
     }
@@ -93,8 +90,8 @@ class SalesController {
         // 全店舗の総売上を計算
         $grandTotal = $this->salesModel->calcGrandTotal($fy);
 
-        // 利用可能な年度一覧を取得（キャッシュ付き）
-        $availableYears = $this->prepareYearFilter();
+        // 利用可能な年度一覧を取得
+        $availableYears = $this->salesModel->getYears();
 
         // 現在選択中の年度
         $selectedYear = $fy;
@@ -122,8 +119,8 @@ class SalesController {
             ];
         }
 
-        // 店舗情報を取得（キャッシュ付き）
-        $shopInfo = $this->showShop($shopId);
+        // 店舗情報を取得
+        $shopInfo = $this->shopModel->findShop($shopId);
 
         // 特定店舗の売上明細を取得
         $details = $this->salesModel->getShopDetails($shopId);
@@ -160,8 +157,8 @@ class SalesController {
             ];
         }
 
-        // 店舗情報を取得（キャッシュ付き）
-        $shopInfo = $this->showShop($shopId);
+        // 店舗情報を取得
+        $shopInfo = $this->shopModel->findShop($shopId);
 
         // 納品待ち注文を取得
         $pendingOrders = $this->salesModel->getPending($shopId);
@@ -177,8 +174,7 @@ class SalesController {
         // CSRFトークンの検証
         $csrfToken = $_POST['csrf_token'] ?? null;
         if (!CsrfToken::validate($csrfToken)) {
-            $_SESSION['error_message'] = '不正なリクエストです（CSRFトークンが無効）';
-            header('Location: order_status.php?sh_id=' . ($_POST['sh_id'] ?? ''), true, 303);
+            header('Location: order_status.php?sh_id=' . ($_POST['sh_id'] ?? '') . '&error=' . urlencode('不正なリクエストです（CSRFトークンが無効）'), true, 303);
             exit();
         }
 
@@ -187,8 +183,7 @@ class SalesController {
         $shopId = $_POST['sh_id'] ?? null;
 
         if (empty($salesId) || empty($shopId)) {
-            $_SESSION['error_message'] = '必要なパラメータが不足しています';
-            header('Location: order_status.php?sh_id=' . $shopId, true, 303);
+            header('Location: order_status.php?sh_id=' . $shopId . '&error=' . urlencode('必要なパラメータが不足しています'), true, 303);
             exit();
         }
 
@@ -231,11 +226,8 @@ class SalesController {
             // エラー時はロールバック
             $this->pdo->rollBack();
 
-            // エラーメッセージをセッションに保存
-            $_SESSION['error_message'] = $e->getMessage();
-
-            // エラー画面にリダイレクト
-            header('Location: order_status.php?sh_id=' . $shopId, true, 303);
+            // エラー画面にリダイレクト（エラーメッセージをクエリパラメータで渡す）
+            header('Location: order_status.php?sh_id=' . $shopId . '&error=' . urlencode($e->getMessage()), true, 303);
             exit();
         }
     }
@@ -260,8 +252,8 @@ class SalesController {
             $grandTotal += $shop['total_sales'] ?? 0;
         }
 
-        // 利用可能な年度一覧を取得（キャッシュ付き）
-        $availableYears = $this->prepareYearFilter();
+        // 利用可能な年度一覧を取得
+        $availableYears = $this->salesModel->getYears();
 
         // 現在選択中の年度
         $selectedYear = $fy;
@@ -269,58 +261,4 @@ class SalesController {
         return compact('shopSales', 'totalMorning', 'totalAfternoon', 'grandTotal', 'availableYears', 'selectedYear');
     }
 
-    /**
-     * 利用可能な年度一覧をキャッシュ付きで取得
-     * @return array 年度の配列
-     */
-    private function prepareYearFilter() {
-        // セッションにキャッシュがあり、有効期限内なら返す
-        if (isset($_SESSION['fiscal_years']) &&
-            isset($_SESSION['fiscal_years_expires']) &&
-            time() < $_SESSION['fiscal_years_expires']) {
-            return $_SESSION['fiscal_years'];
-        }
-
-        // キャッシュがないか期限切れならDBから取得
-        $years = $this->salesModel->getYears();
-
-        // セッションにキャッシュ（1時間有効、年度は変更頻度が低いため長め）
-        $_SESSION['fiscal_years'] = $years;
-        $_SESSION['fiscal_years_expires'] = time() + 3600;
-
-        return $years;
-    }
-
-    /**
-     * 年度一覧のキャッシュをクリア
-     */
-    public function clearFiscalYearCache() {
-        unset($_SESSION['fiscal_years']);
-        unset($_SESSION['fiscal_years_expires']);
-    }
-
-    /**
-     * 個別店舗情報をキャッシュ付きで取得
-     * @param int $shopId 店舗ID
-     * @return array|null 店舗情報
-     */
-    private function showShop($shopId) {
-        $cacheKey = 'shop_info_' . $shopId;
-
-        // セッションにキャッシュがあり、有効期限内なら返す
-        if (isset($_SESSION[$cacheKey]) &&
-            isset($_SESSION[$cacheKey . '_expires']) &&
-            time() < $_SESSION[$cacheKey . '_expires']) {
-            return $_SESSION[$cacheKey];
-        }
-
-        // キャッシュがないか期限切れならDBから取得
-        $shopInfo = $this->shopModel->findShop($shopId);
-
-        // セッションにキャッシュ（30分有効）
-        $_SESSION[$cacheKey] = $shopInfo;
-        $_SESSION[$cacheKey . '_expires'] = time() + 1800;
-
-        return $shopInfo;
-    }
 }

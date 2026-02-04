@@ -6,20 +6,18 @@ require_once __DIR__ . '/../../controllers/ShopController.php';
 // Controllerのインスタンスを作成
 $shopController = new ShopController($pdo);
 
-// セッション有効期限チェック
-$shopController->checkSessionExpiry();
+// 現在年度の店舗データをDBから直接取得
+$shopDTOs = $shopController->displayByFy(CURRENT_FY);
 
-// セッションから店舗データを取得
-$shops = $shopController->getShopsFromSession();
+// DTOを配列に変換
+$shops = [];
+foreach ($shopDTOs as $shopDTO) {
+    $shops[] = ['sh_id' => $shopDTO->sh_id];
+}
 
-// セッションが空の場合、店舗選択処理を実行
+// 店舗データがない場合はエラー
 if (empty($shops)) {
-    $result = $shopController->selectShopId();
-    // エラーがなければリダイレクトされるので、ここには到達しない
-    // エラーがあれば$resultに['error']が入る
-    if (isset($result['error'])) {
-        $error = $result['error'];
-    }
+    $error = '店舗データが見つかりませんでした。';
 }
 ?>
 

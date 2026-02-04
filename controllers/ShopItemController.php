@@ -59,8 +59,8 @@ class ShopItemController {
         require_once __DIR__ . '/ItemController.php';
         $shopController = new ShopController($this->pdo);
         $itemController = new ItemController($this->pdo);
-        $shops = $shopController->getCache();
-        $items = $itemController->getCache();
+        $shops = $shopController->display();
+        $items = $itemController->list()['items'];
 
         // 店舗ごとにグループ化
         $shopItemsGrouped = [];
@@ -108,7 +108,7 @@ class ShopItemController {
         $shopController = new ShopController($this->pdo);
         $itemController = new ItemController($this->pdo);
         $shops = $shopController->displayByFy(CURRENT_FY);
-        $items = $itemController->getCache();
+        $items = $itemController->list()['items'];
 
         // 既に店舗商品が登録されている店舗IDを取得
         $shopItems = $this->shopItemModel->getAll();

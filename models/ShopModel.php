@@ -43,6 +43,9 @@ class ShopModel {
         if ($class === '') {
             return ['valid' => false, 'message' => 'クラスを入力してください'];
         }
+        if (!preg_match('/^[A-Za-z0-9]+$/', $class)) {
+            return ['valid' => false, 'message' => 'クラスは半角英数字で入力してください'];
+        }
         if ($pr_name === '') {
             return ['valid' => false, 'message' => '企画名を入力してください'];
         }

@@ -25,7 +25,6 @@ class ItemController {
         $result = $this->itemModel->create($name, $price);
 
         if ($result['success']) {
-            $this->clearCache();
             header('Location: dsp_item.php', true, 303);
             exit();
         }
@@ -79,29 +78,4 @@ class ItemController {
         exit();
     }
 
-    /**
-     * 全商品一覧をキャッシュ付きで取得
-     * @return array 商品DTOの配列
-     */
-    public function getCache() {
-        if (isset($_SESSION['all_items']) &&
-            isset($_SESSION['all_items_exp']) &&
-            time() < $_SESSION['all_items_exp']) {
-            return $_SESSION['all_items'];
-        }
-
-        $items = $this->itemModel->getAll();
-        $_SESSION['all_items'] = $items;
-        $_SESSION['all_items_exp'] = time() + 600;
-
-        return $items;
-    }
-
-    /**
-     * 商品キャッシュをクリア
-     */
-    public function clearCache() {
-        unset($_SESSION['all_items']);
-        unset($_SESSION['all_items_exp']);
-    }
 }
